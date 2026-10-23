@@ -1,0 +1,14 @@
+{
+  "_note": "Invented Dubsado trigger events for a portrait studio in New York. Names, emails, phones and project ids are made up (555 numbers, example.com). No real client data.",
+  "events": [
+    {"event_id": "evt-101", "type": "project.created", "status": "Lead", "source": "Website contact form", "project_id": "P-1001", "client_name": "Maya Thompson", "session_type": "Family portrait session", "email": "maya.t@example.com", "phone": "(917) 555-0142", "created_at": "2026-10-23T09:12"},
+    {"event_id": "evt-102", "type": "project.updated", "status": "Lead", "source": "Website contact form", "project_id": "P-1001", "client_name": "Maya Thompson", "session_type": "Family portrait session", "email": "maya.t@example.com", "phone": "(917) 555-0142", "created_at": "2026-10-23T09:40"},
+    {"event_id": "evt-101", "type": "project.created", "status": "Lead", "source": "Website contact form", "project_id": "P-1001", "client_name": "Maya Thompson", "session_type": "Family portrait session", "email": "maya.t@example.com", "phone": "(917) 555-0142", "created_at": "2026-10-23T09:12"},
+    {"event_id": "evt-103", "type": "project.created", "status": "Lead", "source": "Manual", "project_id": "P-1002", "client_name": "Carlos Rivera", "session_type": "Headshots", "email": "carlos@example.com", "phone": "718-555-0110", "created_at": "2026-10-23T10:05"},
+    {"event_id": "evt-104", "type": "project.created", "status": "Lead", "source": "Website contact form", "project_id": "P-1003", "client_name": "Siobhan O’Neill", "session_type": "Corporate headshots – team of 6", "email": "siobhan@example.com", "phone": "646.555.0199", "created_at": "2026-10-23T11:30"},
+    {"event_id": "evt-105", "type": "project.created", "status": "Job", "source": "Website contact form", "project_id": "P-1004", "client_name": "Dana Wu", "session_type": "Engagement session", "email": "dana@example.com", "phone": "347-555-0123", "created_at": "2026-10-23T12:02"},
+    {"event_id": "evt-106", "type": "project.created", "status": "Lead", "source": "Mini session form", "project_id": "P-1005", "client_name": "Leah Brooks", "session_type": "Holiday mini session", "email": "leah@example.com", "phone": "212-555-0177", "created_at": "2026-10-23T13:15"},
+    {"event_id": "evt-107", "type": "project.created", "status": "Lead", "source": "Website contact form", "project_id": "P-1006", "client_name": "Priya", "session_type": "Maternity", "email": "", "phone": "555-0100", "created_at": "2026-10-23T14:20"},
+    {"event_id": "evt-108", "type": "project.created", "status": "Lead", "source": "Website contact form", "project_id": "P-1003", "client_name": "Siobhan O’Neill", "session_type": "Corporate headshots – team of 6", "email": "siobhan@example.com", "phone": "646.555.0199", "created_at": "2026-10-23T11:31"}
+  ]
+}

@@ -1,0 +1,30 @@
+1. Which events become a text
+PASS: 9 Dubsado events become 3 alerts and 6 halted
+PASS: alerts for the three new website inquiries (P-1001, P-1003, P-1006)
+PASS: a later edit to the project does not text again
+PASS: a Zapier retry of the same event does not text again
+PASS: a lead added by hand in Dubsado is skipped
+PASS: a booked job (not a lead) is skipped
+PASS: a different form (mini session) is skipped unless you allow it
+PASS: the same project triggering twice texts once
+PASS: allowing the mini-session form adds that alert
+PASS: projects already stored from an earlier run are not texted again
+
+2. The text itself
+PASS: name, session type, phone, email and record link, one per line
+PASS: last initial by default; full name only if you switch it on
+PASS: email left out when you switch it off
+PASS: phone in any format becomes one standard format
+PASS: a 7-digit phone is flagged, not sent as a broken number
+PASS: a first name only still works ("Priya")
+
+3. Segments and cost
+PASS: curly dash swapped so the text stays plain GSM (1 segment)
+PASS: with full names on, the curly apostrophe in O’Neill becomes a plain one
+PASS: without the swap the same text goes Unicode and costs more segments
+PASS: a 160-character GSM text is 1 segment, 161 is 2
+PASS: a 70-character Unicode text is 1 segment, 71 is 2
+PASS: cost = segments x your price per segment
+PASS: empty event list does not crash
+
+23 passed, 0 failed

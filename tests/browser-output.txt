@@ -1,0 +1,37 @@
+127.0.0.1 - - [23/Oct/2026 13:13:16] "GET /index.html HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2026 13:13:16] "GET /src/smsAlertEngine.js HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2026 13:13:16] "GET /data/sample.json HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2026 13:13:16] "GET /index.html HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2026 13:13:16] "GET /src/smsAlertEngine.js HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2026 13:13:16] "GET /data/sample.json HTTP/1.1" 200 -
+0. HTML tag balance
+PASS: all tags closed and nested
+
+1. Default history
+PASS: 9 events: 3 texts, 6 halted
+PASS: first text: Maya T., family portrait, phone, link
+
+2. New inquiry, retry, edit
+PASS: a new website inquiry texts once
+PASS: submitting again is a Zapier retry: no second text
+PASS: editing the project does not text
+
+3. Other sources
+PASS: mini-session form is halted by default
+PASS: allowing that form texts both mini-session leads
+PASS: lead added by hand: no text
+PASS: 7-digit phone: texted with No valid phone
+
+4. What the text includes
+PASS: plain characters off: Siobhan's text turns Unicode and segments go up
+PASS: full names on: O'Neill with a plain apostrophe
+PASS: email off: no email in any text
+PASS: reset restores 3 texts
+
+6. Phone width
+PASS: no horizontal page scroll at 390px
+
+7. Console
+PASS: zero console or page errors
+
+16 passed, 0 failed

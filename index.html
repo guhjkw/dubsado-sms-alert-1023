@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dubsado Lead SMS Alert</title>
+<meta name="description" content="A live preview of a Dubsado to Zapier to SMS alert for a portrait studio: one text per new website inquiry, never for edits, retries or manual leads, with segment and cost checks.">
+<style>
+
+  :root { --bg:#0f1214; --surface:#161b1e; --surface-2:#1c2226; --border:#283036; --text:#e8edf0; --muted:#98a6ad; --gold:#e3b341; --good:#4ade80;
+          --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+  * { box-sizing:border-box; } [hidden] { display:none !important; }
+  html { -webkit-text-size-adjust:100%; }
+  body { margin:0; background:var(--bg); color:var(--text); font:16px/1.55 var(--sans); }
+  .wrap { max-width:1320px; margin:0 auto; padding:0 16px; }
+  .topbar { border-bottom:1px solid var(--border); } .topbar .wrap { display:flex; justify-content:space-between; align-items:center; gap:12px; padding-top:12px; padding-bottom:12px; }
+  .eyebrow { font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+  .pill { font-size:12px; border:1px solid var(--border); border-radius:999px; padding:3px 10px; color:var(--muted); white-space:nowrap; }
+  .hero { padding:34px 0 18px; } h1 { font-size:clamp(28px,4vw,42px); line-height:1.12; margin:6px 0 12px; letter-spacing:-.01em; max-width:30ch; }
+  .lede { color:var(--muted); font-size:18px; max-width:84ch; margin:0; } .lede strong { color:var(--text); }
+  section { padding:26px 0; } h2 { font-size:23px; margin:0 0 6px; } .sub { color:var(--muted); margin:0 0 18px; }
+  .benefits { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin-top:22px; }
+  .benefits div { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px 16px; font-size:15px; color:var(--muted); } .benefits b { color:var(--text); display:block; font-size:16px; margin-bottom:2px; }
+
+  
+  /* ---------- app: Zapier history + phone ---------- */
+  .app { display:grid; grid-template-columns:300px minmax(0,1fr) 300px; border-radius:12px; overflow:hidden; border:1px solid #3a444a; box-shadow:0 20px 60px rgba(0,0,0,.45); background:#f7f6fd; color:#2d2e2e; font:13px/1.45 -apple-system,"Segoe UI",Roboto,Arial,sans-serif; }
+  .side { background:#fff; border-right:1px solid #e6e6ea; padding:12px; min-width:0; }
+  .card { background:#fff; border:1px solid #e6e6ea; border-radius:10px; padding:10px; margin-bottom:10px; } .card h4 { margin:0 0 6px; font-size:13px; }
+  .card label { display:block; font-size:12px; font-weight:600; color:#55565a; margin:6px 0 2px; } .card input, .card select { width:100%; font:13px inherit; font-family:inherit; border:1px solid #cfd0d6; border-radius:8px; padding:5px 8px; }
+  .sw { display:flex !important; gap:6px; align-items:center; font-weight:500 !important; color:#2d2e2e !important; } .sw input { width:auto !important; }
+  .btn { font:600 12.5px inherit; font-family:inherit; border:1px solid #cfd0d6; background:#fff; color:#2d2e2e; border-radius:8px; padding:6px 10px; cursor:pointer; margin:3px 3px 0 0; } .btn.primary { background:#ff4f00; border-color:#ff4f00; color:#fff; }
+  .msg { font-size:12px; margin-top:6px; } .msg.bad { color:#b42318; } .msg.good { color:#067647; }
+  .hist { min-width:0; padding:12px; border-right:1px solid #e6e6ea; }
+  .hh { display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap; } .zl { width:22px; height:22px; border-radius:6px; background:#ff4f00; color:#fff; display:grid; place-items:center; font:800 12px Arial; } .hh b { font-size:14px; }
+  .chips { margin-left:auto; display:flex; gap:6px; flex-wrap:wrap; } .chips span { font-size:11.5px; background:#fff; border:1px solid #e6e6ea; border-radius:10px; padding:1px 8px; }
+  .steps { display:flex; gap:4px; flex-wrap:wrap; margin-bottom:8px; } .steps span { font-size:11px; background:#fff; border:1px solid #e6e6ea; border-radius:6px; padding:2px 6px; }
+  .task { background:#fff; border:1px solid #e6e6ea; border-radius:8px; padding:7px 9px; margin-bottom:6px; display:grid; grid-template-columns:auto 1fr; gap:2px 8px; align-items:start; }
+  .task .tag { font-size:11px; font-weight:700; border-radius:6px; padding:1px 7px; } .ok { background:#dcfae6; color:#067647; } .no { background:#fef3f2; color:#b42318; }
+  .task small { grid-column:2; color:#55565a; } .mono { font-family:var(--mono); font-size:11.5px; color:#55565a; }
+  .tasks { max-height:470px; overflow:auto; }
+  .phone { background:#111; padding:14px; display:flex; flex-direction:column; min-width:0; }
+  .scr { background:#f2f2f7; border-radius:22px; flex:1; padding:12px; overflow:auto; max-height:540px; }
+  .scr .top { text-align:center; font-size:11.5px; color:#666; margin-bottom:8px; } .scr .top b { display:block; font-size:13px; color:#111; }
+  .bubble { background:#e5e5ea; color:#111; border-radius:16px; border-bottom-left-radius:5px; padding:8px 11px; margin:0 20px 4px 0; white-space:pre-wrap; word-break:break-word; font-size:12.5px; }
+  .meta { font-size:10.5px; color:#777; margin:0 0 10px 4px; }
+  /* ---------- page ---------- */
+  .break { background:linear-gradient(0deg,rgba(227,179,65,.07),rgba(227,179,65,.07)),var(--surface); border:1px solid var(--border); border-radius:14px; padding:16px 18px; }
+  .cards2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .panel { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px; min-width:0; } .panel h3 { margin:0 0 6px; font-size:16px; } .panel p { margin:0; color:var(--muted); font-size:14.5px; }
+  ol.steps { list-style:none; counter-reset:s; padding:0; margin:0; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; }
+  ol.steps li { counter-increment:s; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:16px; font-size:15px; }
+  ol.steps li::before { content:counter(s); display:inline-grid; place-items:center; width:26px; height:26px; border-radius:50%; background:var(--surface-2); border:1px solid var(--border); font-weight:700; margin-bottom:8px; }
+  ol.steps li.yours { border-color:var(--good); } .whom { display:block; font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin-bottom:4px; } li.yours .whom { color:var(--good); }
+  .tiers { display:grid; grid-template-columns:1fr 1.3fr 1fr; gap:14px; align-items:start; }
+  .tier { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:20px; } .tier.featured { border:2px solid var(--gold); position:relative; }
+  .tier .badge2 { position:absolute; top:-12px; left:20px; background:var(--gold); color:#1a1405; font-weight:800; font-size:12px; letter-spacing:.05em; text-transform:uppercase; border-radius:6px; padding:3px 10px; }
+  .tier h3 { margin:0; font-size:18px; } .price { font-size:34px; font-weight:800; margin:6px 0 2px; } .price s { font-size:18px; color:var(--muted); font-weight:400; margin-left:8px; }
+  .tier .for { color:var(--muted); font-size:14px; margin:0 0 12px; } .tier ul { margin:0; padding-left:18px; font-size:14.5px; } .tier li { margin:4px 0; }
+  .stack { width:100%; border-collapse:collapse; font-size:14.5px; margin:10px 0 4px; } .stack td { padding:6px 0; border-bottom:1px solid var(--border); vertical-align:top; } .stack td:last-child { text-align:right; color:var(--muted); white-space:nowrap; padding-left:10px; }
+  .stack tr.bonus td:first-child::before { content:"Bonus · "; color:var(--gold); font-weight:700; } .stack tr.total td { border-bottom:0; font-weight:800; color:var(--text); padding-top:10px; } .stack tr.total td:last-child { color:var(--text); }
+  .ms { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin-top:16px; }
+  .ms .tag2 { font-size:12px; color:var(--gold); text-transform:uppercase; letter-spacing:.06em; font-weight:700; } .ms .mp { font-size:26px; font-weight:800; margin:2px 0; } .ms .days { color:var(--muted); font-size:13px; }
+  .ms ul { margin:8px 0; padding-left:18px; font-size:14.5px; } .ms .acc { font-size:13.5px; color:var(--muted); border-top:1px solid var(--border); padding-top:8px; } .ms .acc b { color:var(--text); }
+  .costs { margin-top:14px; font-size:14.5px; color:var(--muted); } .costs b { color:var(--text); }
+  .cta { background:var(--surface); border:2px solid var(--good); border-radius:16px; padding:24px; } .cta h2 { font-size:24px; } .cta p { margin:6px 0 0; max-width:80ch; } .cta .urgency { color:var(--muted); font-size:14px; margin-top:12px; }
+  .need { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px 18px; padding-left:20px; margin:0; }
+  pre.tree { font:13px/1.6 var(--mono); background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px 16px; overflow-x:auto; margin:0 0 10px; }
+  footer { border-top:1px solid var(--border); margin-top:18px; padding:22px 0 40px; color:var(--muted); font-size:14px; } footer p { margin:0 0 8px; max-width:95ch; }
+  
+  @media (max-width:1100px) { .app { grid-template-columns:1fr; } .side, .hist { border-right:0; border-bottom:1px solid #e6e6ea; } }
+  @media (max-width:980px) { .cards2, .ms, .tiers, .benefits { grid-template-columns:1fr; } ol.steps { grid-template-columns:1fr 1fr; } .tier.featured { order:-1; } }
+  @media (max-width:560px) { ol.steps, .need { grid-template-columns:1fr; } .pill { display:none; } .chips { margin-left:0; } }
+  @media (prefers-reduced-motion:reduce) { * { transition:none !important; animation:none !important; } }
+</style>
+</head>
+<body>
+<header class="topbar"><div class="wrap"><span class="eyebrow">Dubsado → Zapier → SMS · Live preview</span><span class="pill">Sample inquiries · invented data</span></div></header>
+
+<main class="wrap">
+  <div class="hero">
+    <span class="eyebrow">For a portrait photography studio in New York</span>
+    <h1>Your phone buzzes once for every new website inquiry, and never for anything else.</h1>
+    <p class="lede"><strong>This is a working preview, not a video.</strong> Send a test inquiry on the left and watch Zapier’s task history and your phone on the right. Then edit the project, replay a Zapier retry or add a lead by hand: none of those text you. Change what the text includes and the segment count and cost update.</p>
+    <div class="benefits">
+      <div><b>One text per inquiry</b>Edits, Zapier retries and repeat triggers are caught, so you never get the same lead twice.</div>
+      <div><b>Only website leads</b>Leads you add by hand, booked jobs and other forms stay quiet unless you choose otherwise.</div>
+      <div><b>Short, safe, cheap</b>Last initial by default, no client message body, and plain characters so a curly apostrophe never doubles the cost.</div>
+    </div>
+  </div>
+
+  <div class="app" id="app" aria-label="Dubsado SMS alert preview">
+    <aside class="side" aria-label="Test inquiry and settings">
+      <div class="card"><h4>Website contact form (test)</h4>
+        <label for="fName">Name</label><input id="fName" value="Jordan Ellis" data-testid="f-name">
+        <label for="fType">Session type</label><input id="fType" value="Newborn session" data-testid="f-type">
+        <label for="fEmail">Email</label><input id="fEmail" value="jordan.e@example.com" data-testid="f-email">
+        <label for="fPhone">Phone</label><input id="fPhone" value="(917) 555-0168" data-testid="f-phone">
+        <label for="fSrc">Arrives via</label><select id="fSrc" data-testid="f-src"><option>Website contact form</option><option>Mini session form</option><option>Manual</option></select>
+        <button type="button" class="btn primary" id="fSend" data-testid="f-send">Submit inquiry</button>
+        <div style="margin-top:6px"><button type="button" class="btn" id="aEdit" data-testid="a-edit">Edit last project</button><button type="button" class="btn" id="aRetry" data-testid="a-retry">Zapier retry</button><button type="button" class="btn" id="reset" data-testid="reset">Reset</button></div>
+        <div class="msg" id="fMsg" role="status" data-testid="f-msg"></div>
+      </div>
+      <div class="card"><h4>What the text includes</h4>
+        <label class="sw"><input type="checkbox" id="sEmail" checked data-testid="s-email"> Client email</label>
+        <label class="sw"><input type="checkbox" id="sFull" data-testid="s-full"> Full last name (off = initial)</label>
+        <label class="sw"><input type="checkbox" id="sGsm" checked data-testid="s-gsm"> Plain characters (avoids Unicode pricing)</label>
+        <label class="sw"><input type="checkbox" id="sMini" data-testid="s-mini"> Also alert for the mini-session form</label>
+        <label for="sPrice">Your price per SMS segment ($)</label><input id="sPrice" type="number" step="0.0001" min="0" value="0.0083" data-testid="s-price">
+      </div>
+    </aside>
+    <div class="hist">
+      <div class="hh"><span class="zl">z</span><b>Zap history</b><span style="color:#55565a">New Dubsado inquiry → SMS</span><div class="chips" id="chips" data-testid="chips"></div></div>
+      <div class="steps"><span>1. Dubsado: new project</span><span>2. Filter: website lead only</span><span>3. Storage: seen this project?</span><span>4. Formatter: build text</span><span>5. SMS</span></div>
+      <div class="tasks" id="tasks" data-testid="tasks"></div>
+    </div>
+    <div class="phone"><div class="scr" data-testid="phone"><div class="top"><b>Studio alerts</b>Text message</div><div id="texts"></div></div></div>
+  </div>
+
+  <section aria-label="Try to break it">
+    <div class="break"><strong>Try to break it.</strong> Submit the same inquiry twice in a row (the second is a Zapier retry). Edit the project. Send one from the mini-session form, then allow that form. Add a lead by hand. Type a phone with 7 digits. Put a curly apostrophe in the name and untick plain characters to watch the segments jump.</div>
+  </section>
+
+  <section aria-labelledby="qa-h">
+    <h2 id="qa-h">What your post asked for</h2>
+    <p class="sub">Straight answers, and the preview runs the rules behind each one.</p>
+    <div class="cards2">
+      <div class="panel"><h3>Similar CRM → SMS automation</h3><p>An AI sales assistant for an event entertainment company that answers new Eventective and website leads by SMS through Twilio and Make.com, plus Twilio SMS work for other clients, including an SMS chatbot MVP.</p></div>
+      <div class="panel"><h3>SMS provider</h3><p>SMS by Zapier first, since it texts your own verified number with no extra account. If it limits you on length, carrier or reliability, Twilio, which gives delivery receipts. I’ll test both from your real form before choosing.</p></div>
+      <div class="panel"><h3>No duplicates</h3><p>A Storage step records each Dubsado project id once it has texted, and the filter only passes new projects created as leads from the website form, so edits, retries and repeat triggers stop there.</p></div>
+      <div class="panel"><h3>Timeline and price</h3><p>Two to three days including tests and the handover doc. Fixed price $150 (see below). Your existing Dubsado workflows are not touched.</p></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="how-h">
+    <h2 id="how-h">How it works</h2>
+    <p class="sub">Four steps, one of them yours.</p>
+    <ol class="steps">
+      <li><span class="whom">Me</span>Check how your form creates the Dubsado project and pick the right trigger.</li>
+      <li class="yours"><span class="whom">You</span>Send one real test inquiry from your website and confirm the text on your phone.</li>
+      <li><span class="whom">Me</span>Build the filter, duplicate check and text, then test edits, retries and other forms.</li>
+      <li><span class="whom">Me</span>Hand over the doc: trigger, filters, mapping, costs, troubleshooting, changing the number.</li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="price-h">
+    <h2 id="price-h">Packages</h2>
+    <p class="sub">Fixed price, paid through Upwork once a real inquiry has texted you once, and only once.</p>
+    <div class="tiers">
+      <div class="tier"><h3>Alert only</h3><div class="price">$90</div><p class="for">The Zap and SMS, tested.</p><ul><li>Website-lead filter</li><li>Duplicate check</li><li>SMS by Zapier</li></ul></div>
+      <div class="tier featured" data-testid="featured"><span class="badge2">Best value</span><h3>Everything in your post</h3>
+        <div class="price">$150<s>$300</s></div><p class="for">Two to three days.</p>
+        <table class="stack" aria-label="What is included">
+          <tr><td>Dubsado trigger checked against your real form</td><td>$50</td></tr>
+          <tr><td>Website-lead filter and duplicate check</td><td>$70</td></tr>
+          <tr><td>SMS provider chosen and set up (Zapier or Twilio)</td><td>$60</td></tr>
+          <tr><td>Field mapping with minimal client data</td><td>$40</td></tr>
+          <tr><td>Handover doc: costs, troubleshooting, changing the number</td><td>$40</td></tr>
+          <tr class="bonus"><td>Edit, retry and other-form tests recorded</td><td>$20</td></tr>
+          <tr class="bonus"><td>14 days of fixes</td><td>$20</td></tr>
+          <tr class="total"><td>Value if bought separately</td><td>$300</td></tr>
+        </table></div>
+      <div class="tier"><h3>Plus a backup alert</h3><div class="price">$220</div><p class="for">If a text ever fails.</p><ul><li>Everything in the $150 package</li><li>Email fallback if the SMS fails</li><li>Weekly count of inquiries by type</li></ul></div>
+    </div>
+    <p class="costs"><b>Third-party costs:</b> your Zapier plan, plus Twilio usage per segment if we use Twilio. The preview shows the segment count for each text.</p>
+  </section>
+
+  <section aria-label="Next step">
+    <div class="cta"><h2>Send me your form link.</h2>
+      <p>Reply in our Upwork chat with the link to your contact form and the Dubsado project fields it fills. I’ll match this preview to your real fields before you hire anyone.</p>
+      <p class="urgency">I can start this week.</p></div>
+  </section>
+
+  <section aria-labelledby="need-h">
+    <h2 id="need-h">What I need from you to start</h2>
+    <ul class="need"><li>Zapier access (or an invite to your account).</li><li>Dubsado connected to Zapier.</li><li>The phone number that should get the texts.</li><li>One test inquiry from your website.</li></ul>
+  </section>
+
+  <section aria-labelledby="hood-h">
+    <h2 id="hood-h">Under the hood</h2>
+    <pre class="tree">dubsado-sms-alert/
+  index.html               this page
+  src/smsAlertEngine.js    filter, duplicate check, text, segments, cost
+  data/sample.json         invented Dubsado events
+  tests/verify.js          23 tests against src/smsAlertEngine.js
+  tests/browser-check.py   drives this page in a real browser</pre>
+    <p class="sub">The page and the tests load the same engine file, so what you just used is what was tested. Hand src/ and tests/ to your developer, or never open them.</p>
+  </section>
+</main>
+
+<footer><div class="wrap">
+  <p>Built from the job post. Names, emails and phone numbers are invented (555 numbers, example.com), and nothing here is connected to Dubsado, Zapier or an SMS provider. The price per segment is an editable placeholder. The filter, duplicate, text, segment and cost rules and the 23 passing tests are real. No prior build for your studio is claimed. This page will be taken down about 30 days after it was sent.</p>
+  <p>Built by Taiwo, Pathfinder Automation Solutions.</p>
+</div></footer>
+
+<script src="src/smsAlertEngine.js"></script>
+<script>
+(function () {
+  'use strict';
+  var FALLBACK = {"_note":"Invented Dubsado trigger events for a portrait studio in New York. Names, emails, phones and project ids are made up (555 numbers, example.com). No real client data.","events":[{"event_id":"evt-101","type":"project.created","status":"Lead","source":"Website contact form","project_id":"P-1001","client_name":"Maya Thompson","session_type":"Family portrait session","email":"maya.t@example.com","phone":"(917) 555-0142","created_at":"2026-10-23T09:12"},{"event_id":"evt-102","type":"project.updated","status":"Lead","source":"Website contact form","project_id":"P-1001","client_name":"Maya Thompson","session_type":"Family portrait session","email":"maya.t@example.com","phone":"(917) 555-0142","created_at":"2026-10-23T09:40"},{"event_id":"evt-101","type":"project.created","status":"Lead","source":"Website contact form","project_id":"P-1001","client_name":"Maya Thompson","session_type":"Family portrait session","email":"maya.t@example.com","phone":"(917) 555-0142","created_at":"2026-10-23T09:12"},{"event_id":"evt-103","type":"project.created","status":"Lead","source":"Manual","project_id":"P-1002","client_name":"Carlos Rivera","session_type":"Headshots","email":"carlos@example.com","phone":"718-555-0110","created_at":"2026-10-23T10:05"},{"event_id":"evt-104","type":"project.created","status":"Lead","source":"Website contact form","project_id":"P-1003","client_name":"Siobhan O’Neill","session_type":"Corporate headshots – team of 6","email":"siobhan@example.com","phone":"646.555.0199","created_at":"2026-10-23T11:30"},{"event_id":"evt-105","type":"project.created","status":"Job","source":"Website contact form","project_id":"P-1004","client_name":"Dana Wu","session_type":"Engagement session","email":"dana@example.com","phone":"347-555-0123","created_at":"2026-10-23T12:02"},{"event_id":"evt-106","type":"project.created","status":"Lead","source":"Mini session form","project_id":"P-1005","client_name":"Leah Brooks","session_type":"Holiday mini session","email":"leah@example.com","phone":"212-555-0177","created_at":"2026-10-23T13:15"},{"event_id":"evt-107","type":"project.created","status":"Lead","source":"Website contact form","project_id":"P-1006","client_name":"Priya","session_type":"Maternity","email":"","phone":"555-0100","created_at":"2026-10-23T14:20"},{"event_id":"evt-108","type":"project.created","status":"Lead","source":"Website contact form","project_id":"P-1003","client_name":"Siobhan O’Neill","session_type":"Corporate headshots – team of 6","email":"siobhan@example.com","phone":"646.555.0199","created_at":"2026-10-23T11:31"}]};
+  var E = window.SmsAlertEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) { return String(s === null || s === undefined ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  var D, events, seq = 500, pseq = 2000;
+  function settings() { return { includeEmail: $('sEmail').checked, fullLastName: $('sFull').checked, gsmSafe: $('sGsm').checked, pricePerSegment: Math.max(0, Number($('sPrice').value) || 0), allowedSources: ['Website contact form'].concat($('sMini').checked ? ['Mini session form'] : []) }; }
+  function load(d) { D = d; events = JSON.parse(JSON.stringify(D.events)); render(); }
+  function render() {
+    var st = settings(), r = E.run(events, st), m = r.metrics;
+    $('chips').innerHTML = '<span data-testid="m-alerts">' + m.alerts + ' texts</span><span data-testid="m-halted">' + m.halted + ' halted</span><span data-testid="m-seg">' + m.segments + ' segments</span><span>$' + m.cost.toFixed(4) + '</span>';
+    // Tag each event in arrival order by replaying the engine on the events up to it.
+    var out = [], prevSent = 0;
+    events.forEach(function (ev, i) {
+      var part = E.run(events.slice(0, i + 1), st), isSent = part.sent.length > prevSent;
+      prevSent = part.sent.length;
+      var item = isSent ? part.sent[part.sent.length - 1] : part.halted[part.halted.length - 1];
+      out.push('<div class="task" data-testid="task" data-kind="' + (isSent ? 'sent' : 'halted') + '"><span class="tag ' + (isSent ? 'ok' : 'no') + '">' + (isSent ? 'Sent' : 'Halted') + '</span><span>' + esc(ev.client_name || 'New client') + ' · <span class="mono">' + esc(ev.project_id) + ' · ' + esc(ev.type) + '</span></span><small>' + (isSent ? esc(item.segments.count + ' segment' + (item.segments.count > 1 ? 's' : '') + ', ' + item.segments.encoding + ', ' + item.segments.units + ' chars') : esc(item.reason)) + '</small></div>');
+    });
+    $('tasks').innerHTML = out.reverse().join('') || '<p style="color:#55565a">No events yet.</p>';
+    $('texts').innerHTML = r.sent.map(function (x) { return '<div class="bubble" data-testid="sms">' + esc(x.text) + '</div><div class="meta">' + esc(x.event.created_at.replace('T', ' ')) + ' · ' + x.segments.count + ' seg · ' + esc(x.segments.encoding) + '</div>'; }).join('');
+  }
+  function addEvent(ev) { events.push(ev); var r = E.run(events, settings()), last = E.run(events.slice(0, -1), settings()); if (r.sent.length > last.sent.length) { $('fMsg').className = 'msg good'; $('fMsg').textContent = 'Texted you: ' + r.sent[r.sent.length - 1].segments.count + ' segment(s).'; } else { $('fMsg').className = 'msg bad'; $('fMsg').textContent = 'No text: ' + r.halted[r.halted.length - 1].reason + '.'; } render(); }
+  function now() { var d = new Date(Date.UTC(2026, 9, 23, 15, 0) + (seq - 500) * 60000); return d.toISOString().slice(0, 16); }
+  $('fSend').addEventListener('click', function () {
+    var last = events[events.length - 1], same = last && last.client_name === $('fName').value && last.email === $('fEmail').value && last.type === 'project.created';
+    if (same) { addEvent(JSON.parse(JSON.stringify(last))); return; } // a resubmit within the same run is replayed as a retry
+    addEvent({ event_id: 'evt-' + (seq++), type: 'project.created', status: 'Lead', source: $('fSrc').value, project_id: 'P-' + (pseq++), client_name: $('fName').value, session_type: $('fType').value, email: $('fEmail').value, phone: $('fPhone').value, created_at: now() });
+  });
+  $('aEdit').addEventListener('click', function () { var last = events.filter(function (e) { return e.type === 'project.created'; }).slice(-1)[0]; if (!last) return; var ev = JSON.parse(JSON.stringify(last)); ev.event_id = 'evt-' + (seq++); ev.type = 'project.updated'; ev.created_at = now(); addEvent(ev); });
+  $('aRetry').addEventListener('click', function () { var last = events.filter(function (e) { return e.type === 'project.created'; }).slice(-1)[0]; if (!last) return; addEvent(JSON.parse(JSON.stringify(last))); });
+  $('reset').addEventListener('click', function () { ['fName', 'fType', 'fEmail', 'fPhone', 'sPrice'].forEach(function (id) { $(id).value = $(id).defaultValue; }); $('fSrc').selectedIndex = 0; $('sEmail').checked = $('sGsm').checked = true; $('sFull').checked = $('sMini').checked = false; $('fMsg').textContent = ''; load(D); });
+  document.querySelector('.side').addEventListener('change', function (e) { if (/^s/.test(e.target.id)) render(); });
+  $('sPrice').addEventListener('input', render);
+  fetch('data/sample.json').then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(load).catch(function () { load(FALLBACK); });
+})();
+</script>
+</body>
+</html>
